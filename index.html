@@ -22,9 +22,9 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -60,11 +60,25 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
 
         .rose-photo:hover {
             transform: scale(1.05);
             box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+        }
+
+        .rose-photo:hover::after {
+            content: '🌹 Click Me!';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(199, 21, 133, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9em;
         }
 
         .rose-photo img {
@@ -93,6 +107,22 @@
             border-radius: 15px;
             margin: 30px 0;
             border: 2px solid #ffb6c1;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff69b4, #c71585);
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
         button {
@@ -128,6 +158,11 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             min-width: 150px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
         }
 
         .stat-number {
@@ -146,6 +181,60 @@
             border-radius: 10px;
             border-left: 5px solid #ff69b4;
         }
+
+        .discography {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .album {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .album:hover {
+            transform: scale(1.05);
+        }
+
+        .album-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #ffb6c1, #ff69b4);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: white;
+        }
+
+        .countdown {
+            background: rgba(199, 21, 133, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .countdown-timer {
+            font-size: 2em;
+            font-weight: bold;
+            color: #c71585;
+            margin: 10px 0;
+        }
+
+        .visitor-counter {
+            background: rgba(255, 182, 193, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -153,14 +242,18 @@
         <h1>🌹 ROSÉ PARK 🌹</h1>
         <div class="subtitle">BLACKPINK's Main Vocalist • The Amazing Vocalist</div>
         
+        <div class="visitor-counter">
+            🌸 Visitor Count: <span id="visitorCount">1</span> 🌸
+        </div>
+        
         <div class="rose-gallery">
-            <div class="rose-photo" onclick="showPhoto('ROSÉ 1')">
+            <div class="rose-photo" onclick="showPhoto('ROSÉ Beautiful Moment 1')">
                 <img src="https://github.com/ly0597861-sys/ly0597861-sys.github.io/blob/main/Blackpink-Jump-Group-Photo-YG-RS.jpg?raw=true" alt="ROSÉ Beautiful Photo 1">
             </div>
-            <div class="rose-photo" onclick="showPhoto('ROSÉ 2')">
+            <div class="rose-photo" onclick="showPhoto('ROSÉ Stunning Look 2')">
                 <img src="https://github.com/ly0597861-sys/ly0597861-sys.github.io/blob/main/img-88fc9b38c3af5768e87bac291ea8beda%20(1).jpg?raw=true" alt="ROSÉ Beautiful Photo 2">
             </div>
-            <div class="rose-photo" onclick="showPhoto('ROSÉ 3')">
+            <div class="rose-photo" onclick="showPhoto('ROSÉ Elegant Pose 3')">
                 <img src="https://github.com/ly0597861-sys/ly0597861-sys.github.io/blob/main/photo_2025-11-11_22-54-59.jpg?raw=true" alt="ROSÉ Beautiful Photo 3">
             </div>
         </div>
@@ -198,36 +291,130 @@
         </div>
 
         <div class="music-player">
-            <h2>🎵 ROSÉ's Solo Music</h2>
+            <h2>🎵 ROSÉ's Music Player</h2>
+            <button onclick="playMusic('ATP')">🎧 Play - ATP</button>
+            <button onclick="playMusic('JUMP')">🎧 Play - JUMP</button>
             <button onclick="playMusic('On The Ground')">🎧 Play - On The Ground</button>
             <button onclick="playMusic('Gone')">🎧 Play - Gone</button>
-            <button onclick="playMusic('Hard to Love')">🎧 Play - Hard to Love</button>
             <button onclick="stopMusic()">⏹️ Stop Music</button>
+            <button onclick="toggleLoop()">🔁 Loop: <span id="loopStatus">Off</span></button>
+            
+            <div class="progress-bar">
+                <div class="progress" id="musicProgress"></div>
+            </div>
+            
             <p id="nowPlaying"></p>
+            <p id="songTimer">0:00 / 0:00</p>
+        </div>
+
+        <div class="discography">
+            <div class="album">
+                <div class="album-cover">ATP</div>
+                <h3>ATP - Single</h3>
+                <p>2024 Release</p>
+                <button onclick="playMusic('ATP')">Play</button>
+            </div>
+            <div class="album">
+                <div class="album-cover">JUMP</div>
+                <h3>JUMP - Single</h3>
+                <p>2024 Release</p>
+                <button onclick="playMusic('JUMP')">Play</button>
+            </div>
+            <div class="album">
+                <div class="album-cover">R</div>
+                <h3>R - Album</h3>
+                <p>2021 Release</p>
+                <button onclick="playMusic('On The Ground')">Play</button>
+            </div>
+            <div class="album">
+                <div class="album-cover">-R-</div>
+                <h3>-R- - Album</h3>
+                <p>2021 Release</p>
+                <button onclick="playMusic('Gone')">Play</button>
+            </div>
+        </div>
+
+        <div class="countdown">
+            <h2>⏰ Next Comeback Countdown</h2>
+            <div class="countdown-timer" id="countdown">00:00:00</div>
+            <p>Until ROSÉ's next amazing release!</p>
         </div>
 
         <div>
             <button onclick="changeTheme()">🎨 Change Theme Color</button>
             <button onclick="showRoseFact()">💖 ROSÉ Fact</button>
+            <button onclick="startPhotoSlideshow()">📷 Photo Slideshow</button>
             <button onclick="surprise()">🎁 Surprise!</button>
+            <button onclick="shareOnSocial()">📱 Share This Page</button>
         </div>
     </div>
 
     <script>
+        let isLooping = false;
+        let visitorCount = localStorage.getItem('visitorCount') || 1;
+        
+        // 初始化访问计数器
+        document.getElementById('visitorCount').textContent = visitorCount;
+        localStorage.setItem('visitorCount', parseInt(visitorCount) + 1);
+
         // 显示照片信息
         function showPhoto(photoName) {
-            alert('You selected: ' + photoName + ' 🌹');
+            const messages = [
+                `Beautiful ${photoName}! 🌹`,
+                `ROSÉ looks stunning in this photo! 💖`,
+                `This ${photoName} captures her elegance! ✨`,
+                `Amazing ${photoName} of our queen! 👑`
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            alert(randomMessage);
         }
 
         // 音乐播放功能
         function playMusic(songName) {
+            const songDurations = {
+                'ATP': '2:45',
+                'JUMP': '3:15', 
+                'On The Ground': '2:48',
+                'Gone': '3:27'
+            };
+            
             document.getElementById('nowPlaying').innerHTML = 
-                '<strong>🎶 Now Playing:</strong> ' + songName + ' by ROSÉ';
+                `<strong>🎶 Now Playing:</strong> ${songName} by ROSÉ`;
+            document.getElementById('songTimer').textContent = 
+                `0:00 / ${songDurations[songName]}`;
+            
+            // 模拟进度条
+            simulateProgress(songName);
+        }
+
+        function simulateProgress(songName) {
+            const progress = document.getElementById('musicProgress');
+            progress.style.width = '0%';
+            
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    if (isLooping) {
+                        playMusic(songName); // 循环播放
+                    }
+                } else {
+                    width++;
+                    progress.style.width = width + '%';
+                }
+            }, 100);
         }
 
         function stopMusic() {
             document.getElementById('nowPlaying').innerHTML = 
                 '<em>Music stopped</em>';
+            document.getElementById('musicProgress').style.width = '0%';
+            document.getElementById('songTimer').textContent = '0:00 / 0:00';
+        }
+
+        function toggleLoop() {
+            isLooping = !isLooping;
+            document.getElementById('loopStatus').textContent = isLooping ? 'On' : 'Off';
         }
 
         // 切换主题颜色
@@ -236,7 +423,8 @@
                 'linear-gradient(45deg, #ffb6c1, #ff69b4, #db7093)',
                 'linear-gradient(45deg, #ffd700, #ff69b4, #9370db)',
                 'linear-gradient(45deg, #98fb98, #ffb6c1, #87ceeb)',
-                'linear-gradient(45deg, #dda0dd, #ff69b4, #f0e68c)'
+                'linear-gradient(45deg, #dda0dd, #ff69b4, #f0e68c)',
+                'linear-gradient(45deg, #ffa07a, #ff69b4, #ba55d3)'
             ];
             const randomTheme = themes[Math.floor(Math.random() * themes.length)];
             document.body.style.background = randomTheme;
@@ -249,10 +437,72 @@
                 'She was born in New Zealand and raised in Australia! 🇦🇺',
                 'ROSÉ speaks fluent Korean and English! 🗣️',
                 'Her unique vocal color is called "honey voice"! 🍯',
-                'She loves collecting perfumes! 💫'
+                'She loves collecting perfumes! 💫',
+                'ROSÉ is the main vocalist of BLACKPINK! 🎤',
+                'She debuted with BLACKPINK in 2016! ✨',
+                'ROSÉ has a pet dog named Hank! 🐶'
             ];
             const randomFact = facts[Math.floor(Math.random() * facts.length)];
             alert('💖 ROSÉ Fact:\n' + randomFact);
+        }
+
+        // 照片轮播功能
+        function startPhotoSlideshow() {
+            const photos = document.querySelectorAll('.rose-photo img');
+            let currentIndex = 0;
+            
+            const slideshow = setInterval(() => {
+                // 移除所有高亮
+                photos.forEach(photo => {
+                    photo.parentElement.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
+                });
+                
+                // 高亮当前照片
+                photos[currentIndex].parentElement.style.boxShadow = '0 0 25px #ff69b4';
+                
+                currentIndex = (currentIndex + 1) % photos.length;
+            }, 1000);
+            
+            setTimeout(() => {
+                clearInterval(slideshow);
+                photos.forEach(photo => {
+                    photo.parentElement.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
+                });
+            }, 10000);
+        }
+
+        // 倒计时功能
+        function updateCountdown() {
+            const nextComeback = new Date('2025-12-25').getTime();
+            const now = new Date().getTime();
+            const distance = nextComeback - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown').textContent = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+        
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // 分享功能
+        function shareOnSocial() {
+            const url = 'https://ly0597861-sys.github.io';
+            const text = 'Check out this amazing ROSÉ fan page! 🌹';
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ROSÉ Fan Page',
+                    text: text,
+                    url: url
+                });
+            } else {
+                alert(`Share this page:\n${url}\n\n${text}`);
+            }
         }
 
         // 惊喜功能
@@ -261,27 +511,32 @@
                 'ROSÉ loves you! 💝',
                 'You are an amazing BLINK! ✨',
                 'Thank you for supporting ROSÉ! 🌹',
-                'ROSÉ appreciates all her fans! 🥰'
+                'ROSÉ appreciates all her fans! 🥰',
+                'You are ROSÉ\'s favorite fan! 💫'
             ];
             const randomSurprise = surprises[Math.floor(Math.random() * surprises.length)];
             
             // 创建飘落玫瑰效果
-            for(let i = 0; i < 10; i++) {
+            for(let i = 0; i < 15; i++) {
                 setTimeout(() => {
                     const rose = document.createElement('div');
                     rose.innerHTML = '🌹';
                     rose.style.position = 'fixed';
                     rose.style.left = Math.random() * 100 + 'vw';
                     rose.style.top = '-50px';
-                    rose.style.fontSize = '30px';
+                    rose.style.fontSize = (Math.random() * 20 + 20) + 'px';
                     rose.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                    rose.style.zIndex = '9999';
                     document.body.appendChild(rose);
                     
                     setTimeout(() => rose.remove(), 5000);
                 }, i * 200);
             }
             
-            alert(randomSurprise);
+            // 显示惊喜消息
+            setTimeout(() => {
+                alert(randomSurprise);
+            }, 1000);
         }
 
         // 添加飘落动画
