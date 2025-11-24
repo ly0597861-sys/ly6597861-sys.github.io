@@ -144,6 +144,17 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
 
+        .song-with-video {
+            background: linear-gradient(45deg, #ff69b4, #c71585);
+            color: white;
+            border: 2px solid #ffb6c1;
+        }
+
+        .song-with-video:hover {
+            background: linear-gradient(45deg, #c71585, #ff69b4);
+            transform: translateY(-3px) scale(1.05);
+        }
+
         .stats {
             display: flex;
             justify-content: center;
@@ -235,6 +246,48 @@
             margin: 20px 0;
             font-size: 1.2em;
         }
+
+        /* YouTube 模态框样式 */
+        .youtube-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .youtube-modal iframe {
+            width: 80%;
+            height: 70%;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255,105,180,0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            background: rgba(199, 21, 133, 0.8);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -292,11 +345,11 @@
 
         <div class="music-player">
             <h2>🎵 ROSÉ's Music Player</h2>
-            <button onclick="playMusic('ATP')">🎧 Play - ATP</button>
-            <button onclick="playMusic('JUMP')">🎧 Play - JUMP</button>
-            <button onclick="playMusic('On The Ground')">🎧 Play - On The Ground</button>
-            <button onclick="playMusic('Gone')">🎧 Play - Gone</button>
-            <button onclick="stopMusic()">⏹️ Stop Music</button>
+            <button onclick="openYouTube('ATP')" class="song-with-video">🎬 ATP - Watch MV</button>
+            <button onclick="openYouTube('JUMP')" class="song-with-video">🎬 JUMP - Watch MV</button>
+            <button onclick="openYouTube('On The Ground')" class="song-with-video">🎬 On The Ground - Watch MV</button>
+            <button onclick="openYouTube('Gone')" class="song-with-video">🎬 Gone - Watch MV</button>
+            <button onclick="stopMusic()">⏹️ Stop</button>
             <button onclick="toggleLoop()">🔁 Loop: <span id="loopStatus">Off</span></button>
             
             <div class="progress-bar">
@@ -312,25 +365,25 @@
                 <div class="album-cover">ATP</div>
                 <h3>ATP - Single</h3>
                 <p>2024 Release</p>
-                <button onclick="playMusic('ATP')">Play</button>
+                <button onclick="openYouTube('ATP')" class="song-with-video">Watch MV</button>
             </div>
             <div class="album">
                 <div class="album-cover">JUMP</div>
                 <h3>JUMP - Single</h3>
                 <p>2024 Release</p>
-                <button onclick="playMusic('JUMP')">Play</button>
+                <button onclick="openYouTube('JUMP')" class="song-with-video">Watch MV</button>
             </div>
             <div class="album">
                 <div class="album-cover">R</div>
                 <h3>R - Album</h3>
                 <p>2021 Release</p>
-                <button onclick="playMusic('On The Ground')">Play</button>
+                <button onclick="openYouTube('On The Ground')" class="song-with-video">Watch MV</button>
             </div>
             <div class="album">
                 <div class="album-cover">-R-</div>
                 <h3>-R- - Album</h3>
                 <p>2021 Release</p>
-                <button onclick="playMusic('Gone')">Play</button>
+                <button onclick="openYouTube('Gone')" class="song-with-video">Watch MV</button>
             </div>
         </div>
 
@@ -349,6 +402,17 @@
         </div>
     </div>
 
+    <!-- YouTube 模态框 -->
+    <div class="youtube-modal" id="youtubeModal">
+        <div class="close-modal" onclick="closeYouTube()">×</div>
+        <iframe id="youtubePlayer" width="560" height="315" 
+                src="" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+        </iframe>
+    </div>
+
     <script>
         let isLooping = false;
         let visitorCount = localStorage.getItem('visitorCount') || 1;
@@ -356,6 +420,46 @@
         // 初始化访问计数器
         document.getElementById('visitorCount').textContent = visitorCount;
         localStorage.setItem('visitorCount', parseInt(visitorCount) + 1);
+
+        // YouTube 视频ID映射
+        const youtubeVideos = {
+            'ATP': 'ekr2nIex040',
+            'JUMP': 'CgCVZdcKcqY',
+            'On The Ground': 'CKZvWhCqx1s',
+            'Gone': 'K9_VFxzCuQ0'
+        };
+
+        // 打开YouTube视频
+        function openYouTube(songName) {
+            const videoId = youtubeVideos[songName];
+            const modal = document.getElementById('youtubeModal');
+            const player = document.getElementById('youtubePlayer');
+            
+            player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            modal.style.display = 'flex';
+            
+            // 更新播放状态显示
+            document.getElementById('nowPlaying').innerHTML = 
+                `<strong>🎬 Now Watching:</strong> ${songName} MV by ROSÉ`;
+        }
+
+        // 关闭YouTube视频
+        function closeYouTube() {
+            const modal = document.getElementById('youtubeModal');
+            const player = document.getElementById('youtubePlayer');
+            
+            player.src = '';
+            modal.style.display = 'none';
+            document.getElementById('nowPlaying').innerHTML = 
+                '<em>Video closed</em>';
+        }
+
+        // 点击模态框外部关闭
+        document.getElementById('youtubeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeYouTube();
+            }
+        });
 
         // 显示照片信息
         function showPhoto(photoName) {
@@ -369,7 +473,7 @@
             alert(randomMessage);
         }
 
-        // 音乐播放功能
+        // 音乐播放功能（作为备选）
         function playMusic(songName) {
             const songDurations = {
                 'ATP': '2:45',
@@ -383,7 +487,6 @@
             document.getElementById('songTimer').textContent = 
                 `0:00 / ${songDurations[songName]}`;
             
-            // 模拟进度条
             simulateProgress(songName);
         }
 
@@ -396,7 +499,7 @@
                 if (width >= 100) {
                     clearInterval(interval);
                     if (isLooping) {
-                        playMusic(songName); // 循环播放
+                        playMusic(songName);
                     }
                 } else {
                     width++;
@@ -452,12 +555,10 @@
             let currentIndex = 0;
             
             const slideshow = setInterval(() => {
-                // 移除所有高亮
                 photos.forEach(photo => {
                     photo.parentElement.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
                 });
                 
-                // 高亮当前照片
                 photos[currentIndex].parentElement.style.boxShadow = '0 0 25px #ff69b4';
                 
                 currentIndex = (currentIndex + 1) % photos.length;
@@ -492,7 +593,7 @@
         // 分享功能
         function shareOnSocial() {
             const url = 'https://ly0597861-sys.github.io';
-            const text = 'Check out this amazing ROSÉ fan page! 🌹';
+            const text = 'Check out this amazing ROSÉ fan page with YouTube MVs! 🌹';
             
             if (navigator.share) {
                 navigator.share({
@@ -533,7 +634,6 @@
                 }, i * 200);
             }
             
-            // 显示惊喜消息
             setTimeout(() => {
                 alert(randomSurprise);
             }, 1000);
