@@ -223,6 +223,8 @@
             justify-content: center;
             font-size: 2em;
             color: white;
+            background-size: cover;
+            background-position: center;
         }
 
         .countdown {
@@ -360,10 +362,10 @@
             <p id="songTimer">0:00 / 0:00</p>
         </div>
 
-                <div class="discography">
+        <div class="discography">
             <!-- JUMP 专辑 -->
             <div class="album">
-                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/159036-1036634.jpg'); background-size: cover; background-position: center;"></div>
+                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/159036-1036634.jpg')"></div>
                 <h3>JUMP - Single</h3>
                 <p>2024 Release</p>
                 <button onclick="openYouTube('JUMP')" class="song-with-video">Watch MV</button>
@@ -371,7 +373,7 @@
             
             <!-- ATP 专辑 -->
             <div class="album">
-                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/7558134.jpg'); background-size: cover; background-position: center;"></div>
+                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/7558134.jpg')"></div>
                 <h3>ATP - Single</h3>
                 <p>2024 Release</p>
                 <button onclick="openYouTube('ATP')" class="song-with-video">Watch MV</button>
@@ -379,7 +381,7 @@
             
             <!-- On The Ground 专辑 -->
             <div class="album">
-                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/okeKp6AleAEST4D8AG7NzxEylIBELBAerSAIKD~noop.jpeg'); background-size: cover; background-position: center;"></div>
+                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/okeKp6AleAEST4D8AG7NzxEylIBELBAerSAIKD~noop.jpeg')"></div>
                 <h3>R - Album</h3>
                 <p>2021 Release</p>
                 <button onclick="openYouTube('On The Ground')" class="song-with-video">Watch MV</button>
@@ -387,12 +389,38 @@
             
             <!-- Gone 专辑 -->
             <div class="album">
-                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/okeKp6AleAEST4D8AG7NzxEylIBELBAerSAIKD~noop.jpeg'); background-size: cover; background-position: center;"></div>
+                <div class="album-cover" style="background-image: url('https://ly0597861-sys.github.io/okeKp6AleAEST4D8AG7NzxEylIBELBAerSAIKD~noop.jpeg')"></div>
                 <h3>-R- - Album</h3>
                 <p>2021 Release</p>
                 <button onclick="openYouTube('Gone')" class="song-with-video">Watch MV</button>
             </div>
         </div>
+
+        <div class="countdown">
+            <h2>⏰ Next Comeback Countdown</h2>
+            <div class="countdown-timer" id="countdown">00:00:00</div>
+            <p>Until ROSÉ's next amazing release!</p>
+        </div>
+
+        <div>
+            <button onclick="changeTheme()">🎨 Change Theme Color</button>
+            <button onclick="showRoseFact()">💖 ROSÉ Fact</button>
+            <button onclick="startPhotoSlideshow()">📷 Photo Slideshow</button>
+            <button onclick="surprise()">🎁 Surprise!</button>
+            <button onclick="shareOnSocial()">📱 Share This Page</button>
+        </div>
+    </div>
+
+    <!-- YouTube 模态框 -->
+    <div class="youtube-modal" id="youtubeModal">
+        <div class="close-modal" onclick="closeYouTube()">×</div>
+        <iframe id="youtubePlayer" width="560" height="315" 
+                src="" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+        </iframe>
+    </div>
 
     <script>
         let isLooping = false;
